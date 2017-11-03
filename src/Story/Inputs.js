@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { compose } from 'recompose'
 import { reduxForm, Field } from 'redux-form'
 import { Button } from 'semantic-ui-react'
@@ -22,19 +23,21 @@ const StoryInputAsAField = ({ input, payload, label, icon, ...rest }) => {
   )
 }
 
-const Inputs = ({ category }) => {
-  return (
-    <div>
-      {storiesList[category].map(storyDetails => (
-        <Field
-          key={storyDetails.payload}
-          component={StoryInputAsAField}
-          name='story'
-          {...storyDetails}
-        />
-      ))}
-    </div>
-  )
+const Inputs = ({ category }) => (
+  <div>
+    {storiesList[category].map(storyDetails => (
+      <Field
+        key={storyDetails.payload}
+        component={StoryInputAsAField}
+        name='story'
+        {...storyDetails}
+      />
+    ))}
+  </div>
+)
+
+Inputs.propTypes = {
+  category: PropTypes.string
 }
 
 export default compose(

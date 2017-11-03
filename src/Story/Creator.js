@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { compose, withHandlers } from 'recompose'
+import { compose, lifecycle, withHandlers } from 'recompose'
 import { formValueSelector, reduxForm } from 'redux-form'
 import { Tab, Loader } from 'semantic-ui-react'
 
@@ -117,11 +117,22 @@ export default compose(
   reduxForm({
     form: 'storyForm'
   }),
+  lifecycle({
+    componentWillReceiveProps (nextProps) {
+      const haveSubmittedAStory =
+        this.props.storyReducer.isLoading && !nextProps.storyReducer.isLoading
+
+      if (haveSubmittedAStory) {
+        this.props.reset()
+      }
+    }
+  }),
   withHandlers({
-    onSubmit: props => values =>
+    onSubmit: props => values => {
       props.submitStory({
         userID: props.self.self._id,
         story: { ...values.story, description: values.description }
       })
+    }
   })
 )(Creator)
