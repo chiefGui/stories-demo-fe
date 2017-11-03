@@ -44,11 +44,19 @@ export default compose(
   }),
   lifecycle({
     componentDidMount () {
-      const image = new window.Image()
+      this.image = new window.Image()
+      this.image.onload = () => this.props.communicateImageValidness()
+      this.image.src = this.props.url
+    },
 
-      image.onload = () => this.props.communicateImageValidness()
+    componentWillUnmount () {
+      if (!this.image) {
+        return
+      }
 
-      image.src = this.props.url
+      this.image.onload = function () {}
+
+      delete this.image
     }
   })
 )(Avatar)
