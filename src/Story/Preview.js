@@ -41,7 +41,9 @@ const Preview = ({ story, handleSubmit, onSubmit }) => {
     <Container>
       {hasIcon && (
         <Figure>
-          {isIconAString && <img style={{ width: '100%' }} src={story.icon} />}
+          {isIconAString && (
+            <img style={{ width: '100%' }} src={story.icon} alt='Icon' />
+          )}
           {!isIconAString && <story.icon />}
         </Figure>
       )}
