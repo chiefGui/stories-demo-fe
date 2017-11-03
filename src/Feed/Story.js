@@ -124,12 +124,12 @@ export default compose(
       if (shouldHighlight) {
         highlight()
 
-        const highlightTimeout = window.setTimeout(() => {
-          unhighlight()
-
-          window.clearTimeout(highlightTimeout)
-        }, 3000)
+        this.highlightTimeout = window.setTimeout(unhighlight, 3000)
       }
+    },
+
+    componentWillUnmount () {
+      window.clearTimeout(this.highlightTimeout)
     }
   })
 )(Story)
