@@ -1,0 +1,2 @@
+export const SELF_LOGIN = 'SELF_LOGIN'
+export const SELF_LOGIN_SUCCESS = 'SELF_LOGIN_SUCCESS'
