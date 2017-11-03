@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { compose, lifecycle, withState, withHandlers } from 'recompose'
 import styled from 'styled-components'
 import { Flex, Box } from 'grid-styled'
 import _ from 'lodash/fp'
@@ -8,7 +9,11 @@ import storiesList from '../Story/data/storiesList'
 import Avatar from '../User/Avatar'
 import colors from '../UI/colors'
 
-const Container = styled.div``
+const Container = styled.div`
+  background-color: ${props =>
+    props.isHighlighted ? '#FFFCD9' : 'transparent'};
+  transition: background-color 1s ease-in-out;
+`
 const User = styled.div`
   display: flex;
   align-items: center;
@@ -48,7 +53,13 @@ const Description = styled.p`
   max-width: 80%;
 `
 
-const Story = ({ title, description, user }) => {
+const Story = ({
+  title,
+  description,
+  user,
+  shouldHighlight,
+  isHighlighted
+}) => {
   const allStories = storiesList.life.concat(storiesList.career)
   const IconGlyph = _.find(
     lifeStories => title === lifeStories.label && lifeStories.icon,
@@ -59,7 +70,7 @@ const Story = ({ title, description, user }) => {
   const hasDescription = description !== null
 
   return (
-    <Container>
+    <Container isHighlighted={isHighlighted}>
       <Flex>
         <Box w={1 / 6}>
           <User>
@@ -95,7 +106,30 @@ const Story = ({ title, description, user }) => {
 Story.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  user: PropTypes.object
+  user: PropTypes.object,
+  shouldHighlight: PropTypes.bool,
+  isHighlighted: PropTypes.bool
 }
 
-export default Story
+export default compose(
+  withState('isHighlighted', 'setHighlight', false),
+  withHandlers({
+    highlight: ({ setHighlight }) => () => setHighlight(true),
+    unhighlight: ({ setHighlight }) => () => setHighlight(false)
+  }),
+  lifecycle({
+    componentDidMount () {
+      const { shouldHighlight, highlight, unhighlight } = this.props
+
+      if (shouldHighlight) {
+        highlight()
+
+        const highlightTimeout = window.setTimeout(() => {
+          unhighlight()
+
+          window.clearTimeout(highlightTimeout)
+        }, 3000)
+      }
+    }
+  })
+)(Story)

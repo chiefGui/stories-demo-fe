@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { compose, lifecycle } from 'recompose'
+import { compose, lifecycle, withState } from 'recompose'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import faker from 'faker'
@@ -47,11 +47,18 @@ const Feed = ({ feed }) => {
         <Stories>
           <Title>Latest 20 today's stories</Title>
 
-          {feed.stories.map(story => (
-            <Item key={`${story.title}-${faker.random.number()}`}>
-              <Story {...story} />
-            </Item>
-          ))}
+          {feed.stories.map(story => {
+            const hasSelfSubmittedAStory = feed.lastStoryBySelf !== null
+            const shouldHighlight = hasSelfSubmittedAStory
+              ? story._id === feed.lastStoryBySelf._id
+              : false
+
+            return (
+              <Item key={`${story.title}-${faker.random.number()}`}>
+                <Story {...story} shouldHighlight={shouldHighlight} />
+              </Item>
+            )
+          })}
         </Stories>
       )}
     </Container>

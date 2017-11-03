@@ -5,19 +5,24 @@ import * as storyActionTypes from '../Story/actionTypes'
 
 const INITIAL_STATE = {
   isLoading: false,
-  stories: null
+  stories: null,
+  lastStoryBySelf: null
 }
 
 const reducer = (state = INITIAL_STATE, action) =>
   reswitch(
     actionTypes.STORIES_LATEST_FETCH,
-    { isLoading: true, stories: null },
+    { isLoading: true, stories: null, lastStoryBySelf: null },
 
     actionTypes.STORIES_LATEST_FETCH_SUCCESS,
-    { isLoading: false, stories: action.stories },
+    { isLoading: false, stories: action.stories, lastStoryBySelf: null },
 
     storyActionTypes.SUBMIT_STORY_SUCCESS,
-    () => ({ isLoading: false, stories: [action.story, ...state.stories] })
+    () => ({
+      isLoading: false,
+      stories: [action.story, ...state.stories],
+      lastStoryBySelf: action.story
+    })
   )(state, action.type)
 
 export default reducer
