@@ -9,6 +9,9 @@ export const baseURL = () => {
 
 export default {
   users: {
+    get: {
+      bySlug: slug => `/users/${slug}`
+    },
     post: '/users'
   },
 

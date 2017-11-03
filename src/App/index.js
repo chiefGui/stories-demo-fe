@@ -8,8 +8,8 @@ import { baseURL } from './endpoints'
 import configureStore from '../Store'
 import rootSaga from '../Store/rootSaga'
 import Home from '../Home'
+import UserProfile from '../Profile'
 import './globals.css'
-import './firebase'
 
 const store = configureStore()
 store.runSaga(rootSaga)
@@ -23,6 +23,8 @@ const App = () => (
     <Router>
       <div>
         <Route exact path='/' component={Home} />
+
+        <Route path='/user/:slug' component={UserProfile} />
       </div>
     </Router>
   </Provider>

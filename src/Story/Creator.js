@@ -107,7 +107,7 @@ const selector = formValueSelector('storyForm')
 const mapStateToProps = state => ({
   storyReducer: state.story,
   story: selector(state, 'story'),
-  self: state.self
+  home: state.home
 })
 
 const mapDispatchToProps = { submitStory: storyActions.submitStory }
@@ -130,7 +130,7 @@ export default compose(
   withHandlers({
     onSubmit: props => values => {
       props.submitStory({
-        userID: props.self.self._id,
+        userID: props.home.self._id,
         story: { ...values.story, description: values.description }
       })
     }

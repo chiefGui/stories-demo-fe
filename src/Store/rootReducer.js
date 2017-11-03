@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux'
 import { reducer as formReducer } from 'redux-form'
-import selfReducer from '../Self/reducer'
+import homeReducer from '../Home/reducer'
 import storyReducer from '../Story/reducer'
-import feedReducer from '../Feed/reducer'
+import profileReducer from '../Profile/reducer'
 
 const rootReducer = combineReducers({
-  self: selfReducer,
+  home: homeReducer,
   story: storyReducer,
-  feed: feedReducer,
+  profile: profileReducer,
   form: formReducer
 })
 

@@ -1,12 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { compose, lifecycle } from 'recompose'
-import { connect } from 'react-redux'
 import styled from 'styled-components'
 import faker from 'faker'
 import { Loader } from 'semantic-ui-react'
+import _ from 'lodash/fp'
 
-import * as feedActions from './actions'
 import Story from './Story'
 import colors from '../UI/colors'
 
@@ -32,53 +30,39 @@ const Item = styled.div`
   }
 `
 
-const Feed = ({ feed }) => {
-  const isLoading = feed.isLoading || feed.stories === null
+const Feed = ({ title, stories, lastStoryBySelf, isLoading }) => (
+  <Container>
+    {isLoading && (
+      <Wrapper>
+        <Loader active>Loading stories...</Loader>
+      </Wrapper>
+    )}
 
-  return (
-    <Container>
-      {isLoading && (
-        <Wrapper>
-          <Loader active>Loading stories...</Loader>
-        </Wrapper>
-      )}
+    {!isLoading && (
+      <Stories>
+        <Title>{title}</Title>
 
-      {!isLoading && (
-        <Stories>
-          <Title>Latest 20 today's stories</Title>
+        {_.map(story => {
+          const shouldHighlight = lastStoryBySelf
+            ? story._id === lastStoryBySelf._id
+            : false
 
-          {feed.stories.map(story => {
-            const hasSelfSubmittedAStory = feed.lastStoryBySelf !== null
-            const shouldHighlight = hasSelfSubmittedAStory
-              ? story._id === feed.lastStoryBySelf._id
-              : false
-
-            return (
-              <Item key={`${story.title}-${faker.random.number()}`}>
-                <Story {...story} shouldHighlight={shouldHighlight} />
-              </Item>
-            )
-          })}
-        </Stories>
-      )}
-    </Container>
-  )
-}
+          return (
+            <Item key={`${story.title}-${faker.random.number()}`}>
+              <Story {...story} shouldHighlight={shouldHighlight} />
+            </Item>
+          )
+        }, stories)}
+      </Stories>
+    )}
+  </Container>
+)
 
 Feed.propTypes = {
-  feed: PropTypes.object
+  title: PropTypes.string,
+  stories: PropTypes.arrayOf(PropTypes.object),
+  lastStoryBySelf: PropTypes.object,
+  isLoading: PropTypes.bool
 }
 
-const mapStateToProps = state => ({ feed: state.feed })
-const mapDispatchToProps = {
-  storiesLatestFetch: feedActions.storiesLatestFetch
-}
-
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  lifecycle({
-    componentDidMount () {
-      this.props.storiesLatestFetch()
-    }
-  })
-)(Feed)
+export default Feed

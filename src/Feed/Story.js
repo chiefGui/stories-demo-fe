@@ -4,6 +4,7 @@ import { compose, lifecycle, withState, withHandlers } from 'recompose'
 import styled from 'styled-components'
 import { Flex, Box } from 'grid-styled'
 import _ from 'lodash/fp'
+import { Link } from 'react-router-dom'
 
 import storiesList from '../Story/data/storiesList'
 import Avatar from '../User/Avatar'
@@ -12,7 +13,7 @@ import colors from '../UI/colors'
 const Container = styled.div`
   background-color: ${props =>
     props.isHighlighted ? '#FFFCD9' : 'transparent'};
-  transition: background-color 1s ease-in-out;
+  transition: ${props => !props.isHighlighted && 'background-color 1s ease-out'};
 `
 const User = styled.div`
   display: flex;
@@ -73,10 +74,12 @@ const Story = ({
     <Container isHighlighted={isHighlighted}>
       <Flex>
         <Box w={1 / 6}>
-          <User>
-            <Avatar url={user.avatar} size={60} />
-            <Name>{user.displayName}</Name>
-          </User>
+          <Link to={`/user/${user.slug}`}>
+            <User>
+              <Avatar url={user.avatar} size={60} />
+              <Name>{user.displayName}</Name>
+            </User>
+          </Link>
         </Box>
 
         <Box w={5 / 6}>

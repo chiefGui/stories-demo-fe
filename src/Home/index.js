@@ -21,9 +21,9 @@ const Body = styled(Box)`
   width: 800px;
 `
 
-const Home = ({ self }) => {
-  const selfUser = self.self
-  const isLoading = self.isLoading || selfUser === null
+const Home = ({ home }) => {
+  const isLoading =
+    home.isLoading || home.self === null || home.stories === null
 
   if (isLoading) {
     return (
@@ -36,25 +36,29 @@ const Home = ({ self }) => {
   return (
     <Flex>
       <Sidebar>
-        <Profile user={selfUser} />
+        <Profile user={home.self} />
       </Sidebar>
 
       <Body>
         <StoryCreator />
-        <Feed />
+        <Feed
+          title="Latest 20 today's stories"
+          stories={home.stories}
+          lastStoryBySelf={home.lastStoryBySelf}
+        />
       </Body>
     </Flex>
   )
 }
 
 Home.propTypes = {
-  self: PropTypes.object
+  home: PropTypes.object
 }
 
-const mapStateToProps = state => ({
-  self: state.self
-})
-const mapDispatchToProps = { loginSelf: selfActions.login }
+const mapStateToProps = ({ home }) => ({ home })
+const mapDispatchToProps = {
+  loginSelf: selfActions.login
+}
 
 export default compose(
   connect(mapStateToProps, mapDispatchToProps),
