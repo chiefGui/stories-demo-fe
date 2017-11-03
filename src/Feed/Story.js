@@ -50,12 +50,12 @@ const Description = styled.p`
 
 const Story = ({ title, description, user }) => {
   const allStories = storiesList.life.concat(storiesList.career)
-  const icon = _.find(
+  const IconGlyph = _.find(
     lifeStories => title === lifeStories.label && lifeStories.icon,
     allStories
   ).icon
 
-  const isIconAnimage = typeof icon === 'string'
+  const isIconAnimage = typeof IconGlyph === 'string'
   const hasDescription = description !== null
 
   return (
@@ -71,9 +71,15 @@ const Story = ({ title, description, user }) => {
         <Box w={5 / 6}>
           <Body isInline={!hasDescription}>
             {isIconAnimage ? (
-              <Icon src={icon} isInline={!hasDescription} />
+              <Icon src={IconGlyph} isInline={!hasDescription} />
             ) : (
-              <Icon />
+              <IconGlyph
+                style={{
+                  display: !hasDescription ? 'inline' : 'block',
+                  margin: !hasDescription ? null : '0 auto',
+                  fontSize: !hasDescription ? '30px' : '50px'
+                }}
+              />
             )}
 
             <Title isInline={!hasDescription}>{title}</Title>
