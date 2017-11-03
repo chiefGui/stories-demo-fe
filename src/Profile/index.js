@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Flex, Box } from 'grid-styled'
 import _ from 'lodash/fp'
-import { Breadcrumb } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
+import { Dimmer, Loader, Breadcrumb } from 'semantic-ui-react'
 
 import * as actions from './actions'
 import Avatar from '../User/Avatar'
@@ -32,7 +32,11 @@ const Profile = ({ profile }) => {
   const isLoading = profile.isLoading || !profile.user
 
   if (isLoading) {
-    return <div>isLoading</div>
+    return (
+      <Dimmer active inverted>
+        <Loader inverted />
+      </Dimmer>
+    )
   }
 
   const stories = _.map(
